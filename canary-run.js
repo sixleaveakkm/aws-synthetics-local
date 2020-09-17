@@ -1,9 +1,8 @@
-const log = require('SyntheticsLogger')
 const synthetics = require('./index')
 
 
 async function execute(entry) {
-  log.info('Start Canary')
+  console.info('Start Canary')
   await synthetics.start()
   await entry()
   await synthetics.close()
