@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/sixleaveakkm/aws-synthetics-local#readme",
   "dependencies": {
-    "puppeteer": "npm@puppeteer-core@3.3.0"
+    "puppeteer": "puppeteer-core@3.3.0"
   },
   "bin": "canary-run"
 }
