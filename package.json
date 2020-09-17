@@ -1,0 +1,28 @@
+{
+  "name": "@sixleaveakkm/aws-synthetics-local",
+  "version": "0.1.0",
+  "description": "dev library for aws synthetics canary",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sixleaveakkm/aws-synthetics-local.git"
+  },
+  "keywords": [
+    "synthetics",
+    "aws"
+  ],
+  "author": "sixleaveakkm",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/sixleaveakkm/aws-synthetics-local/issues"
+  },
+  "homepage": "https://github.com/sixleaveakkm/aws-synthetics-local#readme",
+  "dependencies": {
+    "puppeteer": "3.3.0",
+    "SyntheticsLogger": "npm:@sixleaveakkm/aws-synthetics-logger-local@0.1.0"
+  },
+  "bin": "canary-run"
+}
