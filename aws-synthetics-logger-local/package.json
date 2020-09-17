@@ -11,5 +11,10 @@
     "aws"
   ],
   "author": "sixleaveakkm",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "repository" : {
+    "type" : "git",
+    "url": "ssh://git@github.com/sixleaveakkm/aws-synthetics-local.git",
+    "directory": "aws-synthetics-logger-local"
+  }
 }
