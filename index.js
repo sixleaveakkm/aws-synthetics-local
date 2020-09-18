@@ -1,5 +1,5 @@
-const puppeteer = require('puppeteer')
-
+const puppeteer = require('puppeteer-core')
+const path = require('path')
 let browser
 let page
 
@@ -13,9 +13,10 @@ exports.getCanaryUserAgentString = () => {
   return "CloudWatchSynthetics-local"
 }
 
-exports.start = async () => {
+exports.start = async (chromiumPath, headlessMode) => {
   this.browser = await puppeteer.launch({
-    headless: false,
+    executablePath: path.resolve(chromiumPath),
+    headless: headlessMode,
     defaultViewport: {
       width: 1024,
       height: 768,

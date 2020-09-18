@@ -1,9 +1,9 @@
-const synthetics = require('./index')
+const synthetics = require('../index')
 
 
-async function execute(entry) {
+async function execute(entry, chromiumPath, headlessMode) {
   console.info('Start Canary')
-  await synthetics.start()
+  await synthetics.start(chromiumPath, headlessMode)
   await entry()
   await synthetics.close()
 }
