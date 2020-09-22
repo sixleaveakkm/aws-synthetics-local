@@ -12,14 +12,22 @@ For no code change replacement, add following two develop dependencies to your `
 ```json
 {
     "devDependencies": {
-        "Synthetics": "npm:@sixleaveakkm/aws-synthetics-local@0.1.6",
+        "Synthetics": "npm:@sixleaveakkm/aws-synthetics-local@0.2.0",
         "SyntheticsLogger": "npm:@sixleaveakkm/aws-synthetics-logger-local@0.1.6"
     }
 }
 ```
 
+then run `npm install`
+
 ## Run Locally
-run with default, headlessMode: `false`, screenShot dir: `.screenshot`
+### Install the script 
+`npm i -g @sixleaveakkm/aws-synthetics-local@0.2.0`
+
+It will install a command named `canary-run` in your global node environment.
+
+### Run
+Run with default, headlessMode: `false`, screenShot dir: `.screenshot`
 ```bash
 canary-run yourScriptName.handler
 ```
@@ -27,3 +35,8 @@ or with parameters
 ```bash
 canary-run --headless false --screenshotDir .screenshot yourScriptName.handler
 ```
+
+which will execute your canary script
+
+## example
+[example](example/)

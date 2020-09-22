@@ -1,6 +1,6 @@
 {
   "name": "@sixleaveakkm/aws-synthetics-local",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "dev library for aws synthetics canary",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,10 @@
   "homepage": "https://github.com/sixleaveakkm/aws-synthetics-local#readme",
   "dependencies": {
     "puppeteer": "5.2.0",
-    "SyntheticsLogger": "npm:@sixleaveakkm/aws-synthetics-logger-local@0.1.6"
+    "SyntheticsLogger": "npm:@sixleaveakkm/aws-synthetics-logger-local@0.1.6",
+    "yargs": "^16.0.3"
   },
-  "bin": "./bin/canary-run.js"
+  "bin": {
+    "canary-run": "./bin/canary-run.js"
+  }
 }

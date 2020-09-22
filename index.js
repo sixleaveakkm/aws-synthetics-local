@@ -1,12 +1,13 @@
 const puppeteer = require("puppeteer")
 const log = require("SyntheticsLogger")
 const path = require("path")
+const fs = require('fs')
 let browser
 let page
 
 let screenShotPath = ".screenshot"
 let userAgent = "CloudWatchSynthetics-Local"
-let index = 1
+let index = 0
 
 exports.setLogLevel = log.setLogLevel
 exports.getLogLevel = log.getLogLevel
@@ -73,56 +74,65 @@ exports.setRequestResponseLogHelper = (newHelper) => {
   helper = newHelper
 }
 
-let helper = new RequestResponseLogHelper()
-let RequestResponseLogHelper = () => {
-  this.request = {url: true, resourceType: false, method: false, headers: false, postData: false};
-  this.response = {status: true, statusText: true, url: true, remoteAddress: false, headers: false};
+let helper = function () {
+  let RequestResponseLogHelper = () => {
+    this.request = {url: true, resourceType: false, method: false, headers: false, postData: false};
+    this.response = {status: true, statusText: true, url: true, remoteAddress: false, headers: false};
+  }
+
+  RequestResponseLogHelper.prototype.withLogRequestUrl = (b) => {
+    this.request.url = b
+  }
+
+  RequestResponseLogHelper.prototype.withLogRequestResourceType = (b) => {
+    this.request.resourceType = b
+  }
+
+  RequestResponseLogHelper.prototype.withLogRequestMethod = (b) => {
+    this.request.method = b
+  }
+
+  RequestResponseLogHelper.prototype.withLogRequestHeaders = (b) => {
+    this.request.headers = b
+  }
+
+  RequestResponseLogHelper.prototype.withLogRequestPostData = (b) => {
+    this.request.postData = b
+  }
+
+  RequestResponseLogHelper.prototype.withLogResponseStatus = (b) => {
+    this.response.status = b
+  }
+
+  RequestResponseLogHelper.prototype.withLogResponseStatusText = (b) => {
+    this.response.statusText = b
+  }
+
+  RequestResponseLogHelper.prototype.withLogResponseUrl = (b) => {
+    this.response.url = b
+  }
+
+  RequestResponseLogHelper.prototype.withLogResponseRemoteAddress = (b) => {
+    this.response.remoteAddress = b
+  }
+
+  RequestResponseLogHelper.prototype.withLogResponseHeaders = (b) => {
+    this.response.headers = b
+  }
+
+  return {
+    RequestResponseLogHelper: RequestResponseLogHelper
+  }
 }
 
-RequestResponseLogHelper.prototype.withLogRequestUrl = (b) => {
-  this.request.url = b
-}
-
-RequestResponseLogHelper.prototype.withLogRequestResourceType = (b) => {
-  this.request.resourceType = b
-}
-
-RequestResponseLogHelper.prototype.withLogRequestMethod = (b) => {
-  this.request.method = b
-}
-
-RequestResponseLogHelper.prototype.withLogRequestHeaders = (b) => {
-  this.request.headers = b
-}
-
-RequestResponseLogHelper.prototype.withLogRequestPostData = (b) => {
-  this.request.postData = b
-}
-
-RequestResponseLogHelper.prototype.withLogResponseStatus = (b) => {
-  this.response.status = b
-}
-
-RequestResponseLogHelper.prototype.withLogResponseStatusText = (b) => {
-  this.response.statusText = b
-}
-
-RequestResponseLogHelper.prototype.withLogResponseUrl = (b) => {
-  this.response.url = b
-}
-
-RequestResponseLogHelper.prototype.withLogResponseRemoteAddress = (b) => {
-  this.response.remoteAddress = b
-}
-
-RequestResponseLogHelper.prototype.withLogResponseHeaders = (b) => {
-  this.response.headers = b
-}
 
 
 // ***********************************************************************
 
-exports.start = async (headlessMode) => {
+exports.start = async (headlessMode, screenshotDir) => {
+  if (!fs.existsSync(screenshotDir)) {
+    fs.mkdirSync(screenshotDir)
+  }
   this.browser = await puppeteer.launch({
     headless: headlessMode,
     defaultViewport: {

@@ -8,7 +8,7 @@ export function addUserAgent(page: Page, userAgentString: string): Promise<void>
 
 export function executeStep(stepName : null | string, functionToExecute: Function): Promise<void>
 
-export function getPage(): Page
+export function getPage(): Promise<Page>
 
 /**
  * @description not implement yet
@@ -39,8 +39,9 @@ export function takeScreenshot(stepName: string, suffix: string): Promise<void>
  * @function start
  * @description this function is not export by Synthetics
  * @param headlessMode
+ * @param screenshotDir
  */
-export function start(headlessMode: boolean)
+export function start(headlessMode: boolean, screenshotDir: string)
 
 /**
  * @description this function is not export by Synthetics
