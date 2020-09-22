@@ -1,28 +1,24 @@
-const puppeteer = require('puppeteer-core')
-const path = require('path')
+const puppeteer = require("puppeteer")
+const log = require("SyntheticsLogger")
+const path = require("path")
 let browser
 let page
 
+let screenShotPath = ".screenshot"
+let userAgent = "CloudWatchSynthetics-Local"
 let index = 1
 
-exports.addUserAgent = async (page, str) => {
-  await page.setUserAgent(str)
+exports.setLogLevel = log.setLogLevel
+exports.getLogLevel = log.getLogLevel
+exports.addUserAgent = async (page, userAgentString) => {
+  userAgent += " " + userAgentString
+  await page.setUserAgent(userAgent)
 }
 
 exports.getCanaryUserAgentString = () => {
-  return "CloudWatchSynthetics-local"
+  return userAgent
 }
 
-exports.start = async (chromiumPath, headlessMode) => {
-  this.browser = await puppeteer.launch({
-    executablePath: path.resolve(chromiumPath),
-    headless: headlessMode,
-    defaultViewport: {
-      width: 1024,
-      height: 768,
-    }
-  })
-}
 exports.getPage = async () => {
   const pages = await this.browser.pages()
   console.log(pages.length)
@@ -32,26 +28,108 @@ exports.getPage = async () => {
   return this.page
 }
 
-exports.executeStep =async (name, func) => {
-  console.log(`executeStep "${index}-${name}" start`)
-  await this.page.screenshot({path: `screenshot/${index}-${name}-starting.png`})
+exports.executeStep = async (stepName = null, func) => {
+  index++;
+  let currIdx = index
+
+  let name = ""
+  if (stepName !== null) {
+    name = `-${stepName}`
+  }
+
+  log.info(`executeStep "${currIdx}${name}" start`)
+
+  await this.page.screenshot({path: path.join(screenShotPath, `${currIdx}${name}-starting.png`)})
 
   const start = Date.now()
 
   try {
     await func()
-    console.log(`executeStep "${index}-${name}" succeeded`)
-    await this.page.screenshot({path: `screenshot/${index}-${name}-succeeded.png`})
+    log.info(`executeStep "${currIdx}${name}" succeeded`)
+    await this.page.screenshot({path: path.join(screenShotPath, `${currIdx}${name}-succeeded.png`)})
   } catch (e) {
-    console.log(e)
-    console.log(`executeStep "${index}-${name}" failed`)
-    await this.page.screenshot({path: `screenshot/${index}-${name}-failed.png`})
+    log.info(e)
+    log.info(`executeStep "${currIdx}${name}" failed`)
+    await this.page.screenshot({path: path.join(screenShotPath, `${currIdx}${name}-failed.png`)})
+    throw e
   } finally {
     const end = Date.now()
     const d = end - start
-    console.log(`${name}: ${Math.floor(d / 1000)} seconds`)
+    log.info(`${name}: ${Math.floor(d / 1000)} seconds`)
   }
-  index ++;
+}
+
+exports.takeScreenshot = async (stepName, suffix) => {
+  index++;
+  let currIdx = index
+  return await this.page.screenshot({path: path.join(screenShotPath, `${currIdx}-${stepName}-${suffix}.png`)})
+}
+
+exports.getRequestResponseLogHelper = () => {
+  return helper
+}
+
+exports.setRequestResponseLogHelper = (newHelper) => {
+  helper = newHelper
+}
+
+let helper = new RequestResponseLogHelper()
+let RequestResponseLogHelper = () => {
+  this.request = {url: true, resourceType: false, method: false, headers: false, postData: false};
+  this.response = {status: true, statusText: true, url: true, remoteAddress: false, headers: false};
+}
+
+RequestResponseLogHelper.prototype.withLogRequestUrl = (b) => {
+  this.request.url = b
+}
+
+RequestResponseLogHelper.prototype.withLogRequestResourceType = (b) => {
+  this.request.resourceType = b
+}
+
+RequestResponseLogHelper.prototype.withLogRequestMethod = (b) => {
+  this.request.method = b
+}
+
+RequestResponseLogHelper.prototype.withLogRequestHeaders = (b) => {
+  this.request.headers = b
+}
+
+RequestResponseLogHelper.prototype.withLogRequestPostData = (b) => {
+  this.request.postData = b
+}
+
+RequestResponseLogHelper.prototype.withLogResponseStatus = (b) => {
+  this.response.status = b
+}
+
+RequestResponseLogHelper.prototype.withLogResponseStatusText = (b) => {
+  this.response.statusText = b
+}
+
+RequestResponseLogHelper.prototype.withLogResponseUrl = (b) => {
+  this.response.url = b
+}
+
+RequestResponseLogHelper.prototype.withLogResponseRemoteAddress = (b) => {
+  this.response.remoteAddress = b
+}
+
+RequestResponseLogHelper.prototype.withLogResponseHeaders = (b) => {
+  this.response.headers = b
+}
+
+
+// ***********************************************************************
+
+exports.start = async (headlessMode) => {
+  this.browser = await puppeteer.launch({
+    headless: headlessMode,
+    defaultViewport: {
+      width: 1024,
+      height: 768,
+    },
+  })
 }
 
 exports.close = async () => {
