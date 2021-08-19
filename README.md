@@ -22,7 +22,7 @@ then run `npm install`
 
 ## Run Locally
 ### Install the script 
-`npm i -g @sixleaveakkm/aws-synthetics-local@0.2.0`
+`npm i -g @sixleaveakkm/aws-synthetics-local@latest`
 
 It will install a command named `canary-run` in your global node environment.
 
