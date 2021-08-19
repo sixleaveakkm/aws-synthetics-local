@@ -4,7 +4,7 @@
 pwd
 
 # "install `canary-run`"
-npm i -g @sixleaveakkm/aws-synthetics-logger-local@0.2.0
+npm i -g @sixleaveakkm/aws-synthetics-local@latest
 
 # install devDependencies
 npm i
