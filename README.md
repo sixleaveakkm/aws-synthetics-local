@@ -38,5 +38,13 @@ canary-run --headless false --screenshotDir .screenshot yourScriptName.handler
 
 which will execute your canary script
 
-## example
-[example](example/)
+## Version of Puppeteer
+
+This library depends on *puppeteer-core*. We want to select the same version as in the real environment
+so we can generate most compatible Typescript interface.
+
+The version of Puppeteer in the real environment depends on the Synthetics canary *Runtime* config.
+The latest config as of this writing is `syn-nodejs-puppeteer-3.5`, which brings in Puppeteer-core 10.1.0
+according to the AWS documentation.
+
+Thus, this library depends on that same version as a peer dependency.

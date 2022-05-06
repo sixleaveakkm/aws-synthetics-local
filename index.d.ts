@@ -1,4 +1,4 @@
-import { Page } from 'puppeteer/lib/esm/puppeteer/common/Page'
+import { Page } from 'puppeteer-core/lib/esm/puppeteer/common/Page'
 
 export function setLogLevel( l: 0 | 1 | 2 | 3 )
 
